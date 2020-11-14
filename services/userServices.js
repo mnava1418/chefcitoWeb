@@ -1,5 +1,7 @@
 const validator = require('validator')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const appAuth = require('../config/appAuth')
 const services = require('./index')
 const userData = require('../data/userData')
 
@@ -13,6 +15,11 @@ const validateUser = (user) => {
     } else {
         return true
     }
+}
+
+const generateJWT = (user) => {
+    const token = jwt.sign({user},appAuth.jwtToken)
+    return token
 }
 
 const createUser = async(user) => {
@@ -32,7 +39,8 @@ const createUser = async(user) => {
         return services.generateRespone(400, result)
     }
 
-    return services.generateRespone(200, result)
+    const token = generateJWT(result.user)
+    return services.generateRespone(200, {token})
 }
 
 module.exports = {
