@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
-const app = require('../app');
 const http = require('http');
+const mongoose = require('mongoose')
+const app = require('../app');
+const mongoLoader = require('../loaders/mongoLoader')
 
 const createHttpServer = (port) => {
   app.set('port', port)
@@ -52,7 +54,20 @@ function onError(error) {
 
 function onListening() {
   console.log('Listening on ' + port);
+  mongoLoader()
 }
+
+process.on('SIGINT', async () => {
+  console.log('Stoping server...');
+  mongoose.disconnect((err) => {
+    if(err) {
+        console.log(err)
+    }else {
+        console.log('Mongo connection closed')
+        process.exit(0);
+    }
+  })
+})
 
 const port = normalizePort(process.env.PORT || '3000');
 createHttpServer(port)
