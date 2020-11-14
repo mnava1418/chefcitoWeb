@@ -39,6 +39,9 @@ const createUser = async(user) => {
         return services.generateRespone(400, result)
     }
 
+    console.log(`Sending email to ${result.user.email}`)
+    services.sendEmail('!Bienvenido a Chefcito!', result.user.email, 'Muchas gracias por registrarte! <br><br> Esperamos que chefcito te sea de mucha ayuda.')
+
     const token = generateJWT(result.user)
     return services.generateRespone(200, {token})
 }
