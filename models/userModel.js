@@ -9,6 +9,6 @@ const UserSchema = mongoose.Schema({
     isGoogle: {type: Boolean, required: false, default: false},
 })
 
-UserSchema.plugin(uniqueValidator, {message: 'El {PATH} ya está registrado'})
+UserSchema.plugin(uniqueValidator, {message: 'El {PATH} ya está registrado.'})
 
 module.exports = mongoose.model('user', UserSchema)

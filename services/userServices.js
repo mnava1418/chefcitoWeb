@@ -25,11 +25,11 @@ const generateJWT = (user) => {
 const createUser = async(user) => {
 
     if(!validateUser(user)) {
-        return services.generateRespone(400, {error: 'Usuario no válido'})
+        return services.generateRespone(400, {error: 'Usuario no válido.'})
     }
 
     if(!validateEmail(user.email)) {
-        return services.generateRespone(400, {error: 'Email no válido'})
+        return services.generateRespone(400, {error: 'Email no válido.'})
     }
 
     user.password = bcrypt.hashSync(user.password, 10)
