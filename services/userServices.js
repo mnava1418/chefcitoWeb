@@ -36,7 +36,11 @@ const createUser = async(user) => {
     const result = await userData.createUser(user)
 
     if(result.error) {
-        return services.generateRespone(400, result)
+        if(result.error.errors.email) {
+            return services.generateRespone(400, {error: result.error.errors.email.message})
+        } else {
+            return services.generateRespone(500, result)
+        }
     }
 
     console.log(`Sending email to ${result.user.email}`)
