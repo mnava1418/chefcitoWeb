@@ -22,6 +22,32 @@ const generateJWT = (user) => {
     return token
 }
 
+const getUserByEmail = async (email) => {
+    const userDB = await userData.getUserByEmail(email)
+    return userDB
+}
+
+const login = async (user) => {
+    const result = await getUserByEmail(user.email)
+
+    if(result.error) {
+        return services.generateRespone(500, result)
+    }
+
+    const userDB = result.user
+
+    if(!userDB) {
+        return services.generateRespone(400, {error: 'Usuario y/o password incorrecto.'})
+    }
+
+    if(!bcrypt.compareSync(user.password, userDB.password)) {
+        return services.generateRespone(400, {error: 'Usuario y/o password incorrecto.'})
+    }
+
+    const token = generateJWT(userDB)
+    return services.generateRespone(200, {token})
+}
+
 const createUser = async(user) => {
 
     if(!validateUser(user)) {
@@ -51,5 +77,6 @@ const createUser = async(user) => {
 }
 
 module.exports = {
-    createUser
+    createUser,
+    login
 }
