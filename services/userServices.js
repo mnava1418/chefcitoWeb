@@ -28,6 +28,10 @@ const getUserByEmail = async (email) => {
 }
 
 const login = async (user) => {
+    if(!user.email || !user.password) {
+        return services.generateRespone(400, {error: 'Usuario y/o password incorrecto.'})
+    }
+
     const result = await getUserByEmail(user.email)
 
     if(result.error) {
