@@ -52,6 +52,30 @@ const login = async (user) => {
     return services.generateRespone(200, {token})
 }
 
+const validateSocialMediaUser = async(user) => {
+
+    if(!user.isFaceBook && !user.isGoogle) {
+        return services.generateRespone(400, {error: 'Usuario y/o password incorrecto.'})
+    }
+
+    const result = await getUserByEmail(user.email)
+
+    
+    if(result.error) {
+        return services.generateRespone(500, result)
+    }
+
+    const userDB = result.user
+
+    if(!userDB) {
+        user.password = Math.random().toString(36).slice(-8);
+        return await createUser(user)
+    }
+
+    const token = generateJWT(userDB)
+    return services.generateRespone(200, {token})
+}
+
 const createUser = async(user) => {
 
     if(!validateUser(user)) {
@@ -82,5 +106,6 @@ const createUser = async(user) => {
 
 module.exports = {
     createUser,
-    login
+    login,
+    validateSocialMediaUser
 }

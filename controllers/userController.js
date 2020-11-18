@@ -12,7 +12,14 @@ const login = async(req, res) => {
     res.status(result.status).json(result.json)
 }
 
+const validateSocialMediaUser = async(req, res) => {
+    const user = req.body
+    const result = await userServices.validateSocialMediaUser(user)
+    res.status(result.status).json(result.json)
+}
+
 module.exports = {
     createUser,
-    login
+    login,
+    validateSocialMediaUser
 }
