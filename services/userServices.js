@@ -60,7 +60,6 @@ const validateSocialMediaUser = async(user) => {
 
     const result = await getUserByEmail(user.email)
 
-    
     if(result.error) {
         return services.generateRespone(500, result)
     }
@@ -68,12 +67,10 @@ const validateSocialMediaUser = async(user) => {
     const userDB = result.user
 
     if(!userDB) {
-        user.password = Math.random().toString(36).slice(-8);
         return await createUser(user)
+    } else {
+        return await login(user)
     }
-
-    const token = generateJWT(userDB)
-    return services.generateRespone(200, {token})
 }
 
 const createUser = async(user) => {
