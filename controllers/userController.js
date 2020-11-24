@@ -14,7 +14,13 @@ const login = async(req, res) => {
 
 const validateSocialMediaUser = async(req, res) => {
     const user = req.body
-    const result = await userServices.validateSocialMediaUser(user)
+    let smToken = undefined
+    
+    if(user.isFaceBook) {
+        smToken = req.get('FBToken')
+    }
+
+    const result = await userServices.validateSocialMediaUser(user, smToken)
     res.status(result.status).json(result.json)
 }
 

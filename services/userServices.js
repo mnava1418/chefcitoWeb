@@ -1,6 +1,7 @@
 const validator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const axios = require('axios')
 const appAuth = require('../config/appAuth')
 const services = require('./index')
 const userData = require('../data/userData')
@@ -52,9 +53,32 @@ const login = async (user) => {
     return services.generateRespone(200, {token})
 }
 
-const validateSocialMediaUser = async(user) => {
+const validateFBToken = async (token) => {
+    if(token == undefined) {
+        return false
+    } else {
+        const result = await axios.get(`https://graph.facebook.com/me?access_token=${token}`).catch( error => { return {error}})
+        if(result.error) {
+            return false
+        } else {
+            return true
+        }
+    }
+}
+
+const validateSocialMediaUser = async(user, smToken) => {
 
     if(!user.isFaceBook && !user.isGoogle) {
+        return services.generateRespone(400, {error: 'Usuario y/o password incorrecto.'})
+    }
+
+    let isValidToken = false
+
+    if(user.isFaceBook) {
+        isValidToken = await validateFBToken(smToken)
+    }
+
+    if(!isValidToken) {
         return services.generateRespone(400, {error: 'Usuario y/o password incorrecto.'})
     }
 
