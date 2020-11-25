@@ -2,9 +2,12 @@ const validator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const axios = require('axios')
+const {OAuth2Client, auth} = require('google-auth-library');
 const appAuth = require('../config/appAuth')
 const services = require('./index')
 const userData = require('../data/userData')
+
+const client = new OAuth2Client(appAuth.googleClientId)
 
 const validateEmail = (email) => {
     return validator.isEmail(email)
@@ -66,16 +69,27 @@ const validateFBToken = async (token) => {
     }
 }
 
-const validateSocialMediaUser = async(user, smToken) => {
-
-    if(!user.isFaceBook && !user.isGoogle) {
-        return services.generateRespone(400, {error: 'Usuario y/o password incorrecto.'})
+const validateGoogleToken = async (token) => {
+    if(token == undefined) {
+        return false
+    } else {
+        const result = await client.verifyIdToken({idToken: token, audience: appAuth.googleClientId}).catch(error => {return {error}})
+        if(result.error) {
+            return false
+        } else {
+            return true
+        }
     }
+}
+
+const validateSocialMediaUser = async(user, smToken) => {
 
     let isValidToken = false
 
-    if(user.isFaceBook) {
+    if(user.isFaceBook == 'true') {
         isValidToken = await validateFBToken(smToken)
+    } else if(user.isGoogle == 'true') {
+        isValidToken = await validateGoogleToken(smToken)
     }
 
     if(!isValidToken) {
@@ -93,7 +107,11 @@ const validateSocialMediaUser = async(user, smToken) => {
     if(!userDB) {
         return await createUser(user)
     } else {
-        return await login(user)
+        if(!userDB.isFaceBook && !userDB.isGoogle) {
+            return services.generateRespone(400, {error: 'El email ya está registrado.'})
+        } else {
+            return await login(user)
+        }
     }
 }
 
