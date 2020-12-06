@@ -13,6 +13,13 @@ const createRecipe = async(req, res) => {
     res.status(result.status).json(result.json)
 }
 
+const getRecipes = async(req, res) => {
+    const userId = req.user._id
+    const result = await recipeService.getRecipes(userId)
+    res.status(result.status).json(result.json)
+}
+
 module.exports = {
-    createRecipe
+    createRecipe,
+    getRecipes
 }

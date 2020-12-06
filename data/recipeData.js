@@ -13,6 +13,19 @@ const createRecipe = async(recipe) => {
     return result
 }
 
+const getRecipes = async(userId) => {
+    const result = await RecipeModel.find({user: userId})
+    .then(recipesDb => {
+        return {recipes: recipesDb}
+    })
+    .catch(error => {
+        return {error}
+    })
+    
+    return result
+}
+
 module.exports = {
-    createRecipe
+    createRecipe,
+    getRecipes
 }

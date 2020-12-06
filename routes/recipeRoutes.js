@@ -5,6 +5,8 @@ const recipeController = require('../controllers/recipeController')
 const router = express.Router()
 
 router.use(fileUpload({ useTempFiles: false }))
+router.get('/', [service.validateToken], recipeController.getRecipes)
 router.post('/create', [service.validateToken], recipeController.createRecipe)
+
 
 module.exports = router
