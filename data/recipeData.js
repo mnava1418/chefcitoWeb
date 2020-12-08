@@ -4,6 +4,7 @@ const createRecipe = async(recipe) => {
     const recipeModel = new RecipeModel(recipe)
     const result = await recipeModel.save()
     .then(recipeDb => {
+        recipeDb.image = undefined
         return {recipe: recipeDb}
     })
     .catch(error =>{

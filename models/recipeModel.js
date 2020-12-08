@@ -7,6 +7,7 @@ const RecipeSchema = mongoose.Schema({
     count: {type: Number, required: true},
     instructions: {type: String, required: true},
     image: {type: Buffer},
+    fileName: {type: String, required: false},
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
 })
 
