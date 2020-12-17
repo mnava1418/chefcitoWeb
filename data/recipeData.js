@@ -15,7 +15,7 @@ const createRecipe = async(recipe) => {
 }
 
 const getRecipes = async(userId) => {
-    const result = await RecipeModel.find({user: userId})
+    const result = await RecipeModel.find({user: userId}).sort({updatedAt: -1})
     .then(recipesDb => {
         return {recipes: recipesDb}
     })

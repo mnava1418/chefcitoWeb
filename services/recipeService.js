@@ -4,18 +4,27 @@ const fs = require('fs')
 
 const getRecipes = async(userId) => {
     const result = await recipeData.getRecipes(userId)
+    let recipesByCategory = {}
     if(result.error) {
         return services.generateRespone(500, result)
     } else {
         const recipes = result.recipes
         recipes.forEach(element => {
             const fileName = `${element.user}|${element._id}.jpeg`
+            const category = element.category
+
             fs.writeFileSync(`public/recipes/${fileName}`, element.image)
             element.image = undefined
             element.fileName = fileName
+            
+            if(recipesByCategory[category] == undefined) {
+                recipesByCategory[category] = []
+            }
+
+            recipesByCategory[category].push(element)
         });
 
-        return services.generateRespone(200, {recipes})
+        return services.generateRespone(200, {recipes: recipesByCategory})
     }
 }
 
