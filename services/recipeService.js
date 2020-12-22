@@ -28,6 +28,14 @@ const getRecipes = async(userId) => {
     }
 }
 
+const removeRecipeImage = (fileName) => {
+    try {
+        fs.unlinkSync(`public/recipes/${fileName}`)
+    } catch (error) {}
+    
+    return services.generateRespone(200, {ok: true})
+}
+
 const createRecipe = async(recipe) => {
     let ingredients = recipe.ingredients.split('|')
     ingredients = ingredients.filter(value => { return value != ""})
@@ -43,5 +51,6 @@ const createRecipe = async(recipe) => {
 
 module.exports = {
     createRecipe,
-    getRecipes
+    getRecipes,
+    removeRecipeImage
 }

@@ -19,7 +19,14 @@ const getRecipes = async(req, res) => {
     res.status(result.status).json(result.json)
 }
 
+const removeRecipeImage = async(req, res) => {
+    const fileName = req.params.fileName
+    const result = recipeService.removeRecipeImage(fileName)
+    res.status(result.status).json(result.json)
+}
+
 module.exports = {
     createRecipe,
-    getRecipes
+    getRecipes,
+    removeRecipeImage
 }
