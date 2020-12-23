@@ -49,8 +49,19 @@ const createRecipe = async(recipe) => {
     }
 }
 
+const deleteRecipe = async(recipeId, userId) => {
+    let result = await recipeData.deleteRecipe(recipeId, userId)
+
+    if(result.error) {
+        return services.generateRespone(500, result)
+    } else {
+        return services.generateRespone(200, result)
+    }
+}
+
 module.exports = {
     createRecipe,
     getRecipes,
-    removeRecipeImage
+    removeRecipeImage,
+    deleteRecipe
 }

@@ -25,8 +25,16 @@ const removeRecipeImage = async(req, res) => {
     res.status(result.status).json(result.json)
 }
 
+const deleteRecipe = async(req, res) => {
+    const userId = req.user._id
+    const recipeId = req.params.recipeID
+    const result = await recipeService.deleteRecipe(recipeId, userId)
+    res.status(result.status).json(result.json)
+}
+
 module.exports = {
     createRecipe,
     getRecipes,
-    removeRecipeImage
+    removeRecipeImage,
+    deleteRecipe
 }

@@ -14,6 +14,17 @@ const createRecipe = async(recipe) => {
     return result
 }
 
+const deleteRecipe = async(recipeId, userId) => {
+    const result = await RecipeModel.findOneAndDelete({_id:recipeId, user: userId})
+    .then( res => {
+        return {ok: true}
+    })
+    .catch( error => {
+        return {error}
+    })
+    return result
+}
+
 const getRecipes = async(userId) => {
     const result = await RecipeModel.find({user: userId}).sort({updatedAt: -1})
     .then(recipesDb => {
@@ -28,5 +39,6 @@ const getRecipes = async(userId) => {
 
 module.exports = {
     createRecipe,
-    getRecipes
+    getRecipes,
+    deleteRecipe
 }

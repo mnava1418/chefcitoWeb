@@ -8,5 +8,6 @@ router.use(fileUpload({ useTempFiles: false }))
 router.get('/', [service.validateToken], recipeController.getRecipes)
 router.get('/:fileName', [service.validateToken], recipeController.removeRecipeImage)
 router.post('/create', [service.validateToken], recipeController.createRecipe)
+router.delete('/:recipeID', [service.validateToken], recipeController.deleteRecipe)
 
 module.exports = router
